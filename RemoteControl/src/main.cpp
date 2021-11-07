@@ -11,17 +11,16 @@
 // Robot Configuration:
 // [Name]               [Type]        [Port(s)]
 // Controller1          controller                    
-// LFMotor              motor         1               
-// LBMotor              motor         2               
-// RFMotor              motor         3               
-// RBMotor              motor         4               
+// LFMotor              motor         2               
+// LBMotor              motor         12              
+// RFMotor              motor         10              
+// RBMotor              motor         18              
 // LiftBottom           motor         5               
 // LiftTop              motor         6               
 // Intake               motor         7               
 // ---- END VEXCODE CONFIGURED DEVICES ----
 
 #include "vex.h"
-
 using namespace vex;
 
 void StopAll(){
@@ -31,42 +30,54 @@ void StopAll(){
   RBMotor.stop();
 }
 
+void autonomous(){
+  
+}
+
 int main() {
   // Initializing Robot Configuration. DO NOT REMOVE!
   vexcodeInit();
 
+  Brain.Screen.render(true,false);
   while(true){
+    Brain.Screen.clearScreen();
+    Brain.Screen.setCursor(1, 3);
+    Brain.Screen.print(Controller1.Axis4.position(percent));
+    Brain.Screen.setCursor(3, 3);
+    Brain.Screen.print(Controller1.Axis3.position(percent));
+    Brain.Screen.render();
+
     // Robot rotatation, horizontal axis
     int rotation = Controller1.Axis4.position(percent);
     if(rotation > 0){ // Rotate left
-      LFMotor.spin(forward, rotation, pct);
-      LBMotor.spin(forward, rotation, pct);
-      RFMotor.spin(reverse, rotation, pct);
-      RBMotor.spin(reverse, rotation, pct);
+      LFMotor.spin(reverse, 50, pct);
+      RFMotor.spin(fwd, 50, pct);
+      LBMotor.spin(reverse, 50, pct);
+      RBMotor.spin(fwd, 50, pct);  
     }
     else if(rotation < 0){ // Rotate right
-      LFMotor.spin(reverse, -rotation, pct);
-      LBMotor.spin(reverse, -rotation, pct);
-      RFMotor.spin(forward, -rotation, pct);
-      RBMotor.spin(forward, -rotation, pct);
+      LFMotor.spin(fwd, 50, pct);
+      RFMotor.spin(reverse, 50, pct);
+      LBMotor.spin(fwd, 50, pct);
+      RBMotor.spin(reverse, 50, pct);
     }
     else{
       StopAll();
     }
 
     // Moving forwards/backwards, verticle axis
-    int velocity = Controller1.Axis3.position(percent);
+    int velocity = Controller1.Axis2.position(percent);
     if(velocity > 0){ // Move forward
-      LFMotor.spin(forward, rotation, pct);
-      LBMotor.spin(forward, rotation, pct);
-      RFMotor.spin(forward, rotation, pct);
-      RBMotor.spin(forward, rotation, pct);
+      LFMotor.spin(forward, 50, pct);
+      LBMotor.spin(forward, 50, pct);
+      RFMotor.spin(forward, 50, pct);
+      RBMotor.spin(forward, 50, pct);
     }
     else if(velocity < 0){ // Move backwards
-      LFMotor.spin(reverse, -rotation, pct);
-      LBMotor.spin(reverse, -rotation, pct);
-      RFMotor.spin(reverse, -rotation, pct);
-      RBMotor.spin(reverse, -rotation, pct);
+      LFMotor.spin(reverse, 50, pct);
+      LBMotor.spin(reverse, 50, pct);
+      RFMotor.spin(reverse, 50, pct);
+      RBMotor.spin(reverse, 50, pct);
     }
     else{
       StopAll();
