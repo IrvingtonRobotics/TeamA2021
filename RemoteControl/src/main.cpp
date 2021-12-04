@@ -21,6 +21,8 @@
 // ---- END VEXCODE CONFIGURED DEVICES ----
 
 #include "vex.h"
+#include <cmath>
+#include <bits/stdc++.h>
 using namespace vex;
 
 void StopAll(){
@@ -30,8 +32,8 @@ void StopAll(){
   RBMotor.stop();
 }
 
-void autonomous(){
-  
+float smoothen(float x){
+    return (std::pow(2 * x - 1, 1./3.) + 1) / 2;
 }
 
 int main() {
@@ -39,6 +41,7 @@ int main() {
   vexcodeInit();
 
   Brain.Screen.render(true,false);
+  std::string debuggerText = "";
   while(true){
     // Debugging screen text to display axis values
     Brain.Screen.clearScreen();
@@ -46,42 +49,56 @@ int main() {
     Brain.Screen.print(Controller1.Axis4.position(percent));
     Brain.Screen.setCursor(3, 3);
     Brain.Screen.print(Controller1.Axis3.position(percent));
+    Brain.Screen.setCursor(5, 3);
+    Brain.Screen.print(debuggerText);
     Brain.Screen.render();
 
     // Robot rotatation, horizontal axis
-    int rotation = Controller1.Axis3.position(percent);
-    int velocity = -Controller1.Axis4.position(percent);
+    int rotation = - pow(Controller1.Axis3.position(percent), 2) / 100;
+    int velocity = - pow(Controller1.Axis4.position(percent), 2) / 100;
+    if(Controller1.Axis3.position(percent) < 0){
+      rotation *= -1;
+    }
+    if(Controller1.Axis4.position(percent) < 0){
+      velocity *= -1;
+    }
 
     if(rotation > 0){ // Rotate left
+      debuggerText = "rotating left";
       LFMotor.spin(reverse, rotation, pct);
       RFMotor.spin(fwd, rotation, pct);
       LBMotor.spin(reverse, rotation, pct);
       RBMotor.spin(fwd, rotation, pct);  
     }
     else if(rotation < 0){ // Rotate right
+    debuggerText = "rotating right";
       LFMotor.spin(fwd, -rotation, pct);
       RFMotor.spin(reverse, -rotation, pct);
       LBMotor.spin(fwd, -rotation, pct);
       RBMotor.spin(reverse, -rotation, pct);
     }
     else if(velocity == 0){
+      debuggerText = "";
       StopAll();
     }
 
     // Moving forwards/backwards, verticle axis
     if(velocity > 0){ // Move forward
+      debuggerText = "moving forward";
       LFMotor.spin(forward, velocity, pct);
       LBMotor.spin(forward, velocity, pct);
       RFMotor.spin(forward, velocity, pct);
       RBMotor.spin(forward, velocity, pct);
     }
     else if(velocity < 0){ // Move backwards
+      debuggerText = "moving backwards";
       LFMotor.spin(reverse, -velocity, pct);
       LBMotor.spin(reverse, -velocity, pct);
       RFMotor.spin(reverse, -velocity, pct);
       RBMotor.spin(reverse, -velocity, pct);
     }
     else if(rotation == 0){
+      debuggerText = "";
       StopAll();
     }
 
