@@ -11,12 +11,12 @@
 // Robot Configuration:
 // [Name]               [Type]        [Port(s)]
 // Controller1          controller                    
-// LFMotor              motor         2               
-// LBMotor              motor         12              
-// RFMotor              motor         10              
-// RBMotor              motor         18              
-// LiftBottom           motor         5               
-// LiftTop              motor         6               
+// LFMotor              motor         9               
+// LBMotor              motor         10              
+// RFMotor              motor         1               
+// RBMotor              motor         2               
+// LiftBottom           motor         4               
+// LiftTop              motor         21              
 // Intake               motor         7               
 // ---- END VEXCODE CONFIGURED DEVICES ----
 
@@ -44,34 +44,34 @@ int main() {
   std::string debuggerText = "";
   while(true){
     // Debugging screen text to display axis values
-    Brain.Screen.clearScreen();
-    Brain.Screen.setCursor(1, 3);
-    Brain.Screen.print(Controller1.Axis4.position(percent));
-    Brain.Screen.setCursor(3, 3);
-    Brain.Screen.print(Controller1.Axis3.position(percent));
-    Brain.Screen.setCursor(5, 3);
-    Brain.Screen.print(debuggerText);
-    Brain.Screen.render();
+    // Brain.Screen.clearScreen();
+    // Brain.Screen.setCursor(1, 3);
+    // Brain.Screen.print(Controller1.Axis4.position(percent));
+    // Brain.Screen.setCursor(3, 3);
+    // Brain.Screen.print(Controller1.Axis3.position(percent));
+    // Brain.Screen.setCursor(5, 3);
+    // Brain.Screen.print(debuggerText);
+    // Brain.Screen.render();
 
     // Robot rotatation, horizontal axis
-    int rotation = - pow(Controller1.Axis3.position(percent), 2) / 100;
+    int rotation = pow(Controller1.Axis3.position(percent), 2) / 100;
     int velocity = - pow(Controller1.Axis4.position(percent), 2) / 100;
     if(Controller1.Axis3.position(percent) < 0){
-      rotation *= -1;
+      rotation *= 1;
     }
     if(Controller1.Axis4.position(percent) < 0){
       velocity *= -1;
     }
 
-    if(rotation > 0){ // Rotate left
+    if(rotation < 0){ // Rotate left
       debuggerText = "rotating left";
       LFMotor.spin(reverse, rotation, pct);
       RFMotor.spin(fwd, rotation, pct);
       LBMotor.spin(reverse, rotation, pct);
       RBMotor.spin(fwd, rotation, pct);  
     }
-    else if(rotation < 0){ // Rotate right
-    debuggerText = "rotating right";
+    else if(rotation > 0){ // Rotate right
+      debuggerText = "rotating right";
       LFMotor.spin(fwd, -rotation, pct);
       RFMotor.spin(reverse, -rotation, pct);
       LBMotor.spin(fwd, -rotation, pct);
@@ -125,7 +125,8 @@ int main() {
     }
 
     // Intake control
-    if(Controller1.ButtonR2.pressing()){
+    if(Controller1.ButtonB.pressing()){
+      Intake.setVelocity(32, pct);
       Intake.spin(forward);
     }
     else if(Controller1.ButtonR1.pressing()){
