@@ -11,6 +11,7 @@ extern motor RBMotor;
 extern motor LiftBottom;
 extern motor LiftTop;
 extern motor Intake;
+extern motor Grabber;
 
 /**
  * Used to initialize code/tasks/devices added using tools in VEXcode Pro.
