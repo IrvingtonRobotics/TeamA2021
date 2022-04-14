@@ -15,9 +15,10 @@
 // LBMotor              motor         10              
 // RFMotor              motor         1               
 // RBMotor              motor         2               
-// Lift                 motor         4               
+// LiftR                motor         8               
 // Intake               motor         7               
 // Grabber              motor         5               
+// LiftL                motor         3               
 // ---- END VEXCODE CONFIGURED DEVICES ----
 
 #include "vex.h"
@@ -117,26 +118,31 @@ int main() {
 
     // Lift control
     if(Controller1.ButtonUp.pressing()){
-      Lift.spin(forward, 100, pct);
+      LiftL.spin(forward, 20, pct);
+      LiftR.spin(forward, 20, pct);
     }
     else if(Controller1.ButtonDown.pressing()){
-      Lift.spin(reverse, 20, pct);
+      LiftL.spin(reverse, 20, pct);
+      LiftR.spin(reverse, 20, pct);
     }
     else{
-      Lift.stop();
-      Lift.setStopping(hold);
+      LiftL.stop();
+      LiftL.setStopping(hold);
+      
+      LiftR.stop();
+      LiftR.setStopping(hold);
     }
 
     // Intake control
     if(Controller1.ButtonR2.pressing()){
-      Intake.spin(forward, 20, pct);
+      Intake.spin(reverse, 20, pct);
     }
     else if(Controller1.ButtonR1.pressing()){
-      Intake.spin(reverse, 20, pct);
+      Intake.spin(forward, 20, pct);
     }
     else{
       if(toggleIntake){
-        Intake.spin(forward, 20, pct);
+        Intake.spin(reverse, 20, pct);
       }
       else{
         Intake.stop();

@@ -8,9 +8,10 @@ extern motor LFMotor;
 extern motor LBMotor;
 extern motor RFMotor;
 extern motor RBMotor;
-extern motor Lift;
+extern motor LiftR;
 extern motor Intake;
 extern motor Grabber;
+extern motor LiftL;
 
 /**
  * Used to initialize code/tasks/devices added using tools in VEXcode Pro.
