@@ -13,8 +13,7 @@ motor LFMotor = motor(PORT9, ratio18_1, true);
 motor LBMotor = motor(PORT10, ratio18_1, true);
 motor RFMotor = motor(PORT1, ratio18_1, true);
 motor RBMotor = motor(PORT2, ratio18_1, true);
-motor LiftBottom = motor(PORT4, ratio18_1, true);
-motor LiftTop = motor(PORT21, ratio18_1, false);
+motor Lift = motor(PORT4, ratio18_1, true);
 motor Intake = motor(PORT7, ratio18_1, false);
 motor Grabber = motor(PORT5, ratio18_1, false);
 

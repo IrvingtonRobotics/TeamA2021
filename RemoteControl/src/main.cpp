@@ -15,8 +15,7 @@
 // LBMotor              motor         10              
 // RFMotor              motor         1               
 // RBMotor              motor         2               
-// LiftBottom           motor         4               
-// LiftTop              motor         21              
+// Lift                 motor         4               
 // Intake               motor         7               
 // Grabber              motor         5               
 // ---- END VEXCODE CONFIGURED DEVICES ----
@@ -25,6 +24,8 @@
 #include <cmath>
 #include <bits/stdc++.h>
 using namespace vex;
+
+
 void StopAll(){
   LFMotor.stop();
   LBMotor.stop();
@@ -32,18 +33,25 @@ void StopAll(){
   RBMotor.stop();
 }
 
-bool toggleGrabber = false;
 
 float smoothen(float x){
     return (std::pow(2 * x - 1, 1./3.) + 1) / 2;
 }
 
+bool toggleGrabber = false;
 void tgl(){
   toggleGrabber = true;
 }
-
 void ntgl(){
   toggleGrabber = false;
+}
+
+bool toggleIntake = false;
+void tgli(){
+  toggleIntake = true;
+}
+void ntgli(){
+  toggleIntake = false;
 }
 
 int main() {
@@ -54,16 +62,9 @@ int main() {
   std::string debuggerText = "";
   Controller1.ButtonX.pressed(tgl);
   Controller1.ButtonB.pressed(ntgl);
+  Controller1.ButtonY.pressed(tgli);
+  Controller1.ButtonA.pressed(ntgli);
   while(true){
-    // Debugging screen text to display axis values
-    // Brain.Screen.clearScreen();
-    // Brain.Screen.setCursor(1, 3);
-    // Brain.Screen.print(Controller1.Axis4.position(percent));
-    // Brain.Screen.setCursor(3, 3);
-    // Brain.Screen.print(Controller1.Axis3.position(percent));
-    // Brain.Screen.setCursor(5, 3);
-    // Brain.Screen.print(debuggerText);
-    // Brain.Screen.render();
 
     // Robot rotatation, horizontal axis
     int rotation = - pow(Controller1.Axis3.position(percent), 2) / 120;
@@ -114,37 +115,32 @@ int main() {
       StopAll();
     }
 
-    // Bottom lift control
-    if(Controller1.ButtonX.pressing()){
-      LiftBottom.spin(forward);
-    }
-    else if(Controller1.ButtonB.pressing()){
-      LiftBottom.spin(reverse);
-    }
-    else{
-      LiftBottom.stop();
-    }
-
-    // Upper lift control
+    // Lift control
     if(Controller1.ButtonUp.pressing()){
-      LiftTop.spin(forward);
+      Lift.spin(forward, 100, pct);
     }
     else if(Controller1.ButtonDown.pressing()){
-      LiftTop.spin(forward);
+      Lift.spin(reverse, 20, pct);
     }
     else{
-      LiftTop.stop();
+      Lift.stop();
+      Lift.setStopping(hold);
     }
 
     // Intake control
     if(Controller1.ButtonR2.pressing()){
       Intake.spin(forward, 20, pct);
     }
-    else if(Controller1.ButtonR1.pressing() || Controller1.ButtonY.pressing()){
+    else if(Controller1.ButtonR1.pressing()){
       Intake.spin(reverse, 20, pct);
     }
     else{
-      Intake.stop();
+      if(toggleIntake){
+        Intake.spin(forward, 20, pct);
+      }
+      else{
+        Intake.stop();
+      }
     }
 
     // Grabber control

@@ -8,8 +8,7 @@ extern motor LFMotor;
 extern motor LBMotor;
 extern motor RFMotor;
 extern motor RBMotor;
-extern motor LiftBottom;
-extern motor LiftTop;
+extern motor Lift;
 extern motor Intake;
 extern motor Grabber;
 
