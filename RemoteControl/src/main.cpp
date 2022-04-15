@@ -39,20 +39,19 @@ float smoothen(float x){
     return (std::pow(2 * x - 1, 1./3.) + 1) / 2;
 }
 
-bool toggleGrabber = false;
-void tgl(){
-  toggleGrabber = true;
-}
-void ntgl(){
-  toggleGrabber = false;
+bool grabMode = false;
+int revGrabCount = 0;
+const int revGrabMaxCount = 20;
+void toggleGrabber(){
+  if(grabMode){
+    revGrabCount = revGrabMaxCount;
+  }
+  grabMode = !grabMode;
 }
 
-bool toggleIntake = false;
-void tgli(){
-  toggleIntake = true;
-}
-void ntgli(){
-  toggleIntake = false;
+bool intakeMode = false;
+void toggleIntake(){
+  intakeMode = !intakeMode;
 }
 
 int main() {
@@ -61,10 +60,8 @@ int main() {
 
   Brain.Screen.render(true,false);
   std::string debuggerText = "";
-  Controller1.ButtonX.pressed(tgl);
-  Controller1.ButtonB.pressed(ntgl);
-  Controller1.ButtonY.pressed(tgli);
-  Controller1.ButtonA.pressed(ntgli);
+  Controller1.ButtonX.pressed(toggleGrabber);
+  Controller1.ButtonY.pressed(toggleIntake); 
   while(true){
 
     // Robot rotatation, horizontal axis
@@ -118,12 +115,12 @@ int main() {
 
     // Lift control
     if(Controller1.ButtonUp.pressing()){
-      LiftL.spin(forward, 20, pct);
-      LiftR.spin(forward, 20, pct);
-    }
-    else if(Controller1.ButtonDown.pressing()){
       LiftL.spin(reverse, 20, pct);
       LiftR.spin(reverse, 20, pct);
+    }
+    else if(Controller1.ButtonDown.pressing()){
+      LiftL.spin(forward, 20, pct);
+      LiftR.spin(forward, 20, pct);
     }
     else{
       LiftL.stop();
@@ -141,7 +138,7 @@ int main() {
       Intake.spin(forward, 20, pct);
     }
     else{
-      if(toggleIntake){
+      if(intakeMode){
         Intake.spin(reverse, 20, pct);
       }
       else{
@@ -149,15 +146,18 @@ int main() {
       }
     }
 
+    if(revGrabCount > 0){
+      revGrabCount--;
+    }
     // Grabber control
-    if(Controller1.ButtonL1.pressing()){
+    if(Controller1.ButtonL1.pressing() || revGrabCount > 0){
       Grabber.spin(forward);
     }
     else if(Controller1.ButtonL2.pressing()){
       Grabber.spin(reverse);
     }
     else{
-      if(toggleGrabber){
+      if(grabMode){
         Grabber.spin(reverse);      
       }
       else{
