@@ -114,11 +114,11 @@ int main() {
     }
 
     // Lift control
-    if(Controller1.ButtonUp.pressing()){
+    if(Controller1.ButtonR1.pressing()){
       LiftL.spin(reverse, 20, pct);
       LiftR.spin(reverse, 20, pct);
     }
-    else if(Controller1.ButtonDown.pressing()){
+    else if(Controller1.ButtonR2.pressing()){
       LiftL.spin(forward, 20, pct);
       LiftR.spin(forward, 20, pct);
     }
@@ -131,11 +131,11 @@ int main() {
     }
 
     // Intake control
-    if(Controller1.ButtonR2.pressing()){
-      Intake.spin(reverse, 20, pct);
-    }
-    else if(Controller1.ButtonR1.pressing()){
+    if(Controller1.ButtonDown.pressing()){
       Intake.spin(forward, 20, pct);
+    }
+    else if(Controller1.ButtonUp.pressing()){
+      Intake.spin(reverse, 20, pct);
     }
     else{
       if(intakeMode){
